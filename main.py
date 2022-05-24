@@ -23,15 +23,19 @@ def experiment(variant):
     mt10 = metaworld.MT10()
     training_envs = []
     algorithms = []
-    # this is only done to give env information to agents. Enviroments here are not actually used
+    envs = [task for task in mt10.train_tasks if task.env_name == variant['task']]
     for env_cls in [mt10.train_classes[variant['task']] for _ in range(variant['num_agents'])]:
         env = env_cls()
-        task = random.choice([task for task in mt10.train_tasks
-                                if task.env_name == variant['task']])
-        env.set_task(task)
-        training_envs.append((env, variant['task']))
+        if variant['overlap']:
+            tasks_train = random.choices(envs, k=5)
+            tasks_test = random.choices(envs, k=5)
+        else:
+            tasks_train = random.sample(envs, k=5)
+            tasks_test = random.sample(envs, k=5)
+        env.set_task(tasks_train[0]) # only used for env information
+        training_envs.append((env, tasks_train, tasks_test, variant['task']))
 
-    for i, (env, name) in enumerate(training_envs):
+    for i, (env, tasks_train, tasks_test, name) in enumerate(training_envs):
         # Select task
         # Note: These envs are not actually used, but rather just for info
         expl_env = NormalizedBoxEnv(env)
@@ -118,18 +122,12 @@ def experiment(variant):
             )
 
         eval_path_collector = FedPathCollector(
-            benchmark=mt10,
             policy=policy,
-            kind='train',
-            task_name=name,
-            k=5
+            task_list=tasks_test
         )
         expl_path_collector = FedPathCollector(
-            benchmark=mt10,
             policy=policy,
-            kind='train',
-            task_name=name,
-            k=5
+            task_list=tasks_train
         )
         replay_buffer = EnvReplayBuffer(
             variant['replay_buffer_size'],
@@ -167,7 +165,8 @@ def experiment(variant):
 def main(task):
     variant = dict(
         algorithm="FedFormer",
-        task=task
+        task=task,
+        overlap=False, # whether enviroments should overlap
         fedFormer=True, # Whether to use FedFormer Q-Functions or not
         run_name="FedFormer", # For logging purposes
         version="normal",
