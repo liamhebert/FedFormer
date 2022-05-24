@@ -26,12 +26,12 @@ def experiment(variant):
     envs = [task for task in mt10.train_tasks if task.env_name == variant['task']]
     for env_cls in [mt10.train_classes[variant['task']] for _ in range(variant['num_agents'])]:
         env = env_cls()
-        if variant['overlap']:
-            tasks_train = random.choices(envs, k=5)
-            tasks_test = random.choices(envs, k=5)
-        else:
-            tasks_train = random.sample(envs, k=5)
-            tasks_test = random.sample(envs, k=5)
+        tasks_train = random.sample(envs, k=5)
+        if not variant['overlap']:
+            envs = [x for x in envs if x not in tasks_train]
+        tasks_test = random.sample(envs, k=5)
+        if not variant['overlap']:
+            envs = [x for x in envs if x not in tasks_test]
         env.set_task(tasks_train[0]) # only used for env information
         training_envs.append((env, tasks_train, tasks_test, variant['task']))
 
