@@ -17,7 +17,7 @@ from fedformer import FedFormer
 from fed_path_collector import FedPathCollector
 from policy import TanhGaussianPolicy
 import random
-
+import click
 
 def experiment(variant):
     mt10 = metaworld.MT10()
@@ -161,9 +161,9 @@ def experiment(variant):
     algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'])
     algorithm.train()
 
-
-if __name__ == "__main__":
-    # noinspection PyTypeChecker
+@click.command()
+@click.option("--task", default="window-close-v2", help="MT10 Task Name")
+def main(task):
     variant = dict(
         algorithm="FedFormer",
         fedFormer=True, # Whether to use FedFormer Q-Functions or not
@@ -201,3 +201,7 @@ if __name__ == "__main__":
     ptu.set_gpu_mode(True)  # optionally set the GPU (default=False)
     print('DEVICE', ptu.device)
     experiment(variant)
+    
+if __name__ == "__main__":
+    main()
+    
