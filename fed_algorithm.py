@@ -5,7 +5,7 @@ from sac_algorithm import TorchBatchRLAlgorithm
 from joblib import Parallel, delayed
 import torch 
 
-class MetaFedSACAlgorithm:
+class FedAlgorithm:
     def __init__(self,
                  algorithms: Iterable[TorchBatchRLAlgorithm],
                  num_epochs,
