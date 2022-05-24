@@ -15,7 +15,7 @@ from fed_trainer import FedTrainer
 from fed_algorithm import FedAlgorithm
 from fedformer import FedFormer
 from fed_path_collector import FedPathCollector
-from fed_sac_policy import TanhGaussianPolicy
+from policy import TanhGaussianPolicy
 import random
 
 
