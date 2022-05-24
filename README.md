@@ -17,6 +17,8 @@ The main entry point to run our code is 'main.py'. Inside that file, you can fin
 ```python
     variant = dict(
         algorithm="FedFormer",
+        task=task,
+        overlap=False, # whether enviroments should overlap
         fedFormer=True, # Whether to use FedFormer Q-Functions or not
         run_name="FedFormer", # For logging purposes
         version="normal",
