@@ -11,11 +11,11 @@ from rlkit.torch.networks import ConcatMlp
 import numpy as np 
 import torch.nn as nn
 from sac_algorithm import TorchBatchRLAlgorithm
-from meta_sac_trainer import SACTrainer
-from meta_sac_algorithm import MetaFedSACAlgorithm
-from meta_sac_networks import FederatedTransformer
-from meta_path_collector import MetaPathCollector
-from meta_sac_policy import TanhGaussianPolicy
+from fed_trainer import FedTrainer
+from fed_algorithm import FedAlgorithm
+from fedformer import FedFormer
+from fed_path_collector import FedPathCollector
+from fed_sac_policy import TanhGaussianPolicy
 import random
 
 
@@ -40,7 +40,7 @@ def experiment(variant):
 
         # build networks
         M = variant['layer_size']
-        qf1 = FederatedTransformer(
+        qf1 = FedFormer(
             input_size=obs_dim + action_dim,
             from_saved=variant['from_saved'],
             saved_id='qf1',
@@ -51,7 +51,7 @@ def experiment(variant):
             agent_index=i,
             num_agents=variant['num_agents']
         )
-        qf2 = FederatedTransformer(
+        qf2 = FedFormer(
             input_size=obs_dim + action_dim,
             from_saved=variant['from_saved'],
             saved_id='qf2',
@@ -62,7 +62,7 @@ def experiment(variant):
             agent_index=i,
             num_agents=variant['num_agents']
         )
-        target_qf1 = FederatedTransformer(
+        target_qf1 = FedFormer(
             input_size=obs_dim + action_dim,
             from_saved=variant['from_saved'],
             saved_id='target_qf1',
@@ -73,7 +73,7 @@ def experiment(variant):
             agent_index=i,
             num_agents=variant['num_agents']
         )
-        target_qf2 = FederatedTransformer(
+        target_qf2 = FedFormer(
             input_size=obs_dim + action_dim,
             from_saved=variant['from_saved'],
             saved_id='target_qf2',
@@ -130,14 +130,14 @@ def experiment(variant):
             max_std=np.exp(2.)
         )
 
-        eval_path_collector = MetaPathCollector(
+        eval_path_collector = FedPathCollector(
             benchmark=mt10,
             policy=policy,
             kind='train',
             task_name=name,
             k=5
         )
-        expl_path_collector = MetaPathCollector(
+        expl_path_collector = FedPathCollector(
             benchmark=mt10,
             policy=policy,
             kind='train',
@@ -148,7 +148,7 @@ def experiment(variant):
             variant['replay_buffer_size'],
             expl_env,
         )
-        trainer = SACTrainer(
+        trainer = FedTrainer(
             env=eval_env,
             policy=policy,
             qf1=qf1,
@@ -157,10 +157,6 @@ def experiment(variant):
             target_qf2=target_qf2,
             **variant['trainer_kwargs']
         )
-
-        # TODO - Implement Meta Algorithm
-        # Basically, we want one of these for each env, and we want to
-        # be able to manually control each iteration, rather then a free flowing
 
         algorithm_instance = TorchBatchRLAlgorithm(
             trainer=trainer,
@@ -176,14 +172,14 @@ def experiment(variant):
         algorithms += [algorithm_instance]
   
 
-    algorithm = MetaFedSACAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'])
+    algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'])
     algorithm.train()
 
 
 if __name__ == "__main__":
     # noinspection PyTypeChecker
     variant = dict(
-        algorithm="FedSAC",
+        algorithm="FedFormer",
         version="normal",
         from_saved=5,
         layer_size=400,
