@@ -1,4 +1,5 @@
 # FedFormer: Contextual Federation with Attention in Reinforcement Learning
+![Architecture](https://github.com/liamhebert/FedFormer/raw/main/FedFormer%20Architecture.png)
 This repository contains for the code for the NeurIPS 22' pre-print FedFormer: Contextual Federation with Attention in Reinforcement Learning. 
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/liamhebert/FedFormer/blob/main/LICENSE)
@@ -6,6 +7,7 @@ This repository contains for the code for the NeurIPS 22' pre-print FedFormer: C
 **Abstract:**
 A core issue in federated reinforcement learning is defining how to aggregate insights from multiple agents into one. This is commonly done by taking the average of each participating agent's model weights into one common model (FedAvg). We instead propose FedFormer, a novel federation strategy that utilizes Transformer Attention to contextually aggregate embeddings from models originating from different learner agents. In so doing, we attentively weigh contributions of other agents with respect to the current agent's environment and learned relationships, thus providing more effective and efficient federation. We evaluate our methods on the Meta-World environment and find that our approach yields significant improvements over FedAvg and non-federated Soft Actor Critique single agent methods. Our results compared to Soft Actor Critique show that FedFormer performs better while still abiding by the privacy constraints of federated learning. In addition, we demonstrate nearly linear improvements in effectiveness with increased agent pools in certain tasks. This is contrasted by FedAvg, which fails to make noticeable improvements when scaled. 
 
+![Results on MT10](https://github.com/liamhebert/FedFormer/raw/main/overall.png)
 ## To install:
 We provide conda env files at 'environment.yml' which contains all of our python dependencies. You can create the environment as 
 ```shell
