@@ -7,7 +7,7 @@ from rlkit.pythonplusplus import identity
 import torch
 import copy
 
-class FederatedTransformer(PyTorchModule):
+class FedFormer(PyTorchModule):
     def __init__(self, hidden_sizes, output_size, input_size, transformer_layer_config, num_layers, agent_index, num_agents=5,
                  from_saved=0,
                  saved_id=None,
