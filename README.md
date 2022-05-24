@@ -51,4 +51,4 @@ Once modified, run as
 ```
 python main.py --task=<task>
 ```
-where <task> is once of the [10 MT10 MetaWorld Tasks]{https://meta-world.github.io/figures/ml10.gif}, such as `reach-v2` and `window-close-v2`. 
+where <task> is once of the [10 MT10 MetaWorld Tasks](https://meta-world.github.io/figures/ml10.gif), such as `reach-v2` and `window-close-v2`. 
