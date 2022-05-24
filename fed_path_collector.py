@@ -2,23 +2,17 @@ from rlkit.samplers.data_collector import MdpPathCollector
 from rlkit.samplers.rollout_functions import rollout
 import numpy as np
 from rlkit.envs.wrappers import NormalizedBoxEnv
-import random 
-
-MW_TASKS_PER_ENV = 50
 
 class FedPathCollector(MdpPathCollector):
     def __init__(
         self,
-        benchmark,
         policy,
+        task_list,
         max_num_epoch_paths_saved=None,
         render=False,
         render_kwargs=None,
         rollout_fn=rollout,
-        save_env_in_snapshot=True,
-        task_name='reach-v2',
-        kind='train',
-        k=1):
+        save_env_in_snapshot=True):
         
         super().__init__(None, 
             policy, 
@@ -28,20 +22,7 @@ class FedPathCollector(MdpPathCollector):
             save_env_in_snapshot)
         
         
-
-        if kind == 'train':
-            self.env_cls = benchmark.train_classes[task_name]()
-            # self._classes = benchmark.train_classes
-            self.task_list = random.choices([task for task in benchmark.train_tasks if task.env_name == task_name], k=k)
-           
-        elif kind == 'test':
-            self.env_cls = benchmark.test_classes[task_name]()
-            # self._classes = benchmark.test_classes
-            self.task_list = random.choices([task for task in benchmark.train_tasks if task.env_name == task_name], k=k)
-        else:
-            raise ValueError('kind must be either "train" or "test", '
-                             f'not {kind!r}')
-
+        self.task_list = task_list
         self.task_order = np.arange(len(self.task_list))
         
         self._next_order_index = 0
@@ -51,7 +32,6 @@ class FedPathCollector(MdpPathCollector):
         """Reshuffles the task orders."""
         np.random.shuffle(self.task_order)
         
-    
     def collect_new_paths(self, max_path_length, num_steps, discard_incomplete_paths, with_replacement=False):
         paths = []
         num_steps_collected = 0
@@ -60,7 +40,7 @@ class FedPathCollector(MdpPathCollector):
             curr_task = self.task_list[self.task_order[order_index]]
             self.env_cls.set_task(curr_task)
 
-            env = NormalizedBoxEnv(self.env_cls) # TODO - Maybe do this at the start?
+            env = NormalizedBoxEnv(self.env_cls) 
 
             max_path_length_this_loop = min(  # Do not go over num_steps
                 max_path_length,
@@ -98,7 +78,6 @@ class FedPathCollector(MdpPathCollector):
         self._epoch_paths.extend(paths)
         return paths
 
-    
     def get_snapshot(self):
         snapshot_dict = dict(
             policy=self._policy,
@@ -106,4 +85,3 @@ class FedPathCollector(MdpPathCollector):
         if self._save_env_in_snapshot:
             snapshot_dict['env'] = self.env_cls
         return snapshot_dict
-
