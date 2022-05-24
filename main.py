@@ -162,7 +162,9 @@ def experiment(variant):
 
 @click.command()
 @click.option("--task", default="window-close-v2", help="MT10 Task Name")
-def main(task):
+@click.option("--seed", default=1, help="Random Seed")
+def main(task, seed):
+    random.seed(seed)
     variant = dict(
         algorithm="FedFormer",
         task=task,
