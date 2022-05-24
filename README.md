@@ -55,6 +55,6 @@ The main entry point to run our code is 'main.py'. Inside that file, you can fin
 ```
 Once modified, run as 
 ```
-python main.py --task=<task>
+python main.py --task=<task> --seed=<seed>
 ```
-where <task> is once of the [10 MT10 MetaWorld Tasks](https://meta-world.github.io/figures/ml10.gif), such as `reach-v2` and `window-close-v2`. 
+where <task> is once of the [10 MT10 MetaWorld Tasks](https://meta-world.github.io/figures/ml10.gif), such as `reach-v2` and `window-close-v2`, and <seed> is a numerical random seed to set enviroment distribution.
