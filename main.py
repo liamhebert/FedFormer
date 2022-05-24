@@ -40,95 +40,81 @@ def experiment(variant):
 
         # build networks
         M = variant['layer_size']
-        qf1 = FedFormer(
-            input_size=obs_dim + action_dim,
-            from_saved=variant['from_saved'],
-            saved_id='qf1',
-            output_size=1,
-            hidden_sizes=[M, M, M],
-            num_layers=variant['transformer_num_layers'],
-            transformer_layer_config=variant['transformer_layer_kwargs'],
-            agent_index=i,
-            num_agents=variant['num_agents']
-        )
-        qf2 = FedFormer(
-            input_size=obs_dim + action_dim,
-            from_saved=variant['from_saved'],
-            saved_id='qf2',
-            output_size=1,
-            hidden_sizes=[M, M, M],
-            num_layers=variant['transformer_num_layers'],
-            transformer_layer_config=variant['transformer_layer_kwargs'],
-            agent_index=i,
-            num_agents=variant['num_agents']
-        )
-        target_qf1 = FedFormer(
-            input_size=obs_dim + action_dim,
-            from_saved=variant['from_saved'],
-            saved_id='target_qf1',
-            output_size=1,
-            hidden_sizes=[M, M, M],
-            num_layers=variant['transformer_num_layers'],
-            transformer_layer_config=variant['transformer_layer_kwargs'],
-            agent_index=i,
-            num_agents=variant['num_agents']
-        )
-        target_qf2 = FedFormer(
-            input_size=obs_dim + action_dim,
-            from_saved=variant['from_saved'],
-            saved_id='target_qf2',
-            output_size=1,
-            hidden_sizes=[M, M, M],
-            num_layers=variant['transformer_num_layers'],
-            transformer_layer_config=variant['transformer_layer_kwargs'],
-            agent_index=i,
-            num_agents=variant['num_agents']
-        )
-        # qf1 = ConcatMlp(
-        #     input_size=obs_dim + action_dim,
-        #     output_size=1,
-        #     hidden_sizes=[M, M, M],
-        #     # num_layers=variant['transformer_num_layers'],
-        #     # transformer_layer_config=variant['transformer_layer_kwargs'],
-        #     # agent_index=i,
-        #     # num_agents=variant['num_agents']
-        # )
-        # qf2 = ConcatMlp(
-        #     input_size=obs_dim + action_dim,
-        #     output_size=1,
-        #     hidden_sizes=[M, M, M],
-        #     # num_layers=variant['transformer_num_layers'],
-        #     # transformer_layer_config=variant['transformer_layer_kwargs'],
-        #     # agent_index=i,
-        #     # num_agents=variant['num_agents']
-        # )
-        # target_qf1 = ConcatMlp(
-        #     input_size=obs_dim + action_dim,
-        #     output_size=1,
-        #     hidden_sizes=[M, M, M],
-        #     # num_layers=variant['transformer_num_layers'],
-        #     # transformer_layer_config=variant['transformer_layer_kwargs'],
-        #     # agent_index=i,
-        #     # num_agents=variant['num_agents']
-        # )
-        # target_qf2 = ConcatMlp(
-        #     input_size=obs_dim + action_dim,
-        #     output_size=1,
-        #     hidden_sizes=[M, M, M],
-        #     # num_layers=variant['transformer_num_layers'],
-        #     # transformer_layer_config=variant['transformer_layer_kwargs'],
-        #     # agent_index=i,
-        #     # num_agents=variant['num_agents']
-        # )
-        policy = TanhGaussianPolicy(
-            obs_dim=obs_dim,
-            action_dim=action_dim,
-            hidden_sizes=[M, M, M],
-            hidden_nonlinearity=nn.ReLU,
-            output_nonlinearity=None,
-            min_std=np.exp(-20.),
-            max_std=np.exp(2.)
-        )
+        if variant['fedFormer']:
+            qf1 = FedFormer(
+                input_size=obs_dim + action_dim,
+                from_saved=variant['from_saved'],
+                saved_id='qf1',
+                output_size=1,
+                hidden_sizes=[M, M, M],
+                num_layers=variant['transformer_num_layers'],
+                transformer_layer_config=variant['transformer_layer_kwargs'],
+                agent_index=i,
+                num_agents=variant['num_agents']
+            )
+            qf2 = FedFormer(
+                input_size=obs_dim + action_dim,
+                from_saved=variant['from_saved'],
+                saved_id='qf2',
+                output_size=1,
+                hidden_sizes=[M, M, M],
+                num_layers=variant['transformer_num_layers'],
+                transformer_layer_config=variant['transformer_layer_kwargs'],
+                agent_index=i,
+                num_agents=variant['num_agents']
+            )
+            target_qf1 = FedFormer(
+                input_size=obs_dim + action_dim,
+                from_saved=variant['from_saved'],
+                saved_id='target_qf1',
+                output_size=1,
+                hidden_sizes=[M, M, M],
+                num_layers=variant['transformer_num_layers'],
+                transformer_layer_config=variant['transformer_layer_kwargs'],
+                agent_index=i,
+                num_agents=variant['num_agents']
+            )
+            target_qf2 = FedFormer(
+                input_size=obs_dim + action_dim,
+                from_saved=variant['from_saved'],
+                saved_id='target_qf2',
+                output_size=1,
+                hidden_sizes=[M, M, M],
+                num_layers=variant['transformer_num_layers'],
+                transformer_layer_config=variant['transformer_layer_kwargs'],
+                agent_index=i,
+                num_agents=variant['num_agents']
+            )
+        else:
+            qf1 = ConcatMlp(
+                input_size=obs_dim + action_dim,
+                output_size=1,
+                hidden_sizes=[M, M, M],
+            )
+            qf2 = ConcatMlp(
+                input_size=obs_dim + action_dim,
+                output_size=1,
+                hidden_sizes=[M, M, M],
+            )
+            target_qf1 = ConcatMlp(
+                input_size=obs_dim + action_dim,
+                output_size=1,
+                hidden_sizes=[M, M, M],
+            )
+            target_qf2 = ConcatMlp(
+                input_size=obs_dim + action_dim,
+                output_size=1,
+                hidden_sizes=[M, M, M],
+            )
+            policy = TanhGaussianPolicy(
+                obs_dim=obs_dim,
+                action_dim=action_dim,
+                hidden_sizes=[M, M, M],
+                hidden_nonlinearity=nn.ReLU,
+                output_nonlinearity=None,
+                min_std=np.exp(-20.),
+                max_std=np.exp(2.)
+            )
 
         eval_path_collector = FedPathCollector(
             benchmark=mt10,
@@ -165,7 +151,7 @@ def experiment(variant):
             exploration_data_collector=expl_path_collector,
             evaluation_data_collector=eval_path_collector,
             replay_buffer=replay_buffer,
-            name=f'fedAttn 1 agents onboarded - agent {name} ({i})',
+            name=f'{variant['fedFormer']} - agent {name} ({i})',
             **variant['algorithm_kwargs']
         )
         algorithm_instance.to(ptu.device)
@@ -180,15 +166,17 @@ if __name__ == "__main__":
     # noinspection PyTypeChecker
     variant = dict(
         algorithm="FedFormer",
+        fedFormer=True, # Whether to use FedFormer Q-Functions or not
+        run_name="FedFormer", # For logging purposes
         version="normal",
-        from_saved=5,
-        layer_size=400,
-        replay_buffer_size=int(1E6),
-        transformer_num_layers=2,
-        num_agents=1,
+        from_saved=5, # How many encoder networks to save 
+        layer_size=400, # Hidden layer size
+        replay_buffer_size=int(1E6), 
+        transformer_num_layers=2, # number of transformer encoder layers to use
+        num_agents=5, # number of federation agents to initialize
         transformer_layer_kwargs=dict(
-            d_model=400,
-            nhead=4
+            d_model=400, # hidden size for each transformer layer
+            nhead=4 # number of attention heads to initialize
         ),
         algorithm_kwargs=dict(
             num_epochs=250,
