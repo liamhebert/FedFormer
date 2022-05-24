@@ -23,12 +23,13 @@ def experiment(variant):
     mt10 = metaworld.MT10()
     training_envs = []
     algorithms = []
-    for env_cls in [mt10.train_classes['window-close-v2'] for _ in range(variant['num_agents'])]:
+    # this is only done to give env information to agents. Enviroments here are not actually used
+    for env_cls in [mt10.train_classes[variant['task']] for _ in range(variant['num_agents'])]:
         env = env_cls()
         task = random.choice([task for task in mt10.train_tasks
-                                if task.env_name == 'window-close-v2'])
+                                if task.env_name == variant['task']])
         env.set_task(task)
-        training_envs.append((env, 'window-close-v2'))
+        training_envs.append((env, variant['task']))
 
     for i, (env, name) in enumerate(training_envs):
         # Select task
@@ -151,7 +152,7 @@ def experiment(variant):
             exploration_data_collector=expl_path_collector,
             evaluation_data_collector=eval_path_collector,
             replay_buffer=replay_buffer,
-            name=f'{variant['fedFormer']} - agent {name} ({i})',
+            name=f'{variant['run_name']} - agent {name} ({i})',
             **variant['algorithm_kwargs']
         )
         algorithm_instance.to(ptu.device)
@@ -166,6 +167,7 @@ def experiment(variant):
 def main(task):
     variant = dict(
         algorithm="FedFormer",
+        task=task
         fedFormer=True, # Whether to use FedFormer Q-Functions or not
         run_name="FedFormer", # For logging purposes
         version="normal",
