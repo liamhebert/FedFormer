@@ -6,7 +6,7 @@ import random
 
 MW_TASKS_PER_ENV = 50
 
-class MetaPathCollector(MdpPathCollector):
+class FedPathCollector(MdpPathCollector):
     def __init__(
         self,
         benchmark,
