@@ -111,15 +111,15 @@ def experiment(variant):
                 output_size=1,
                 hidden_sizes=[M, M, M],
             )
-            policy = TanhGaussianPolicy(
-                obs_dim=obs_dim,
-                action_dim=action_dim,
-                hidden_sizes=[M, M, M],
-                hidden_nonlinearity=nn.ReLU,
-                output_nonlinearity=None,
-                min_std=np.exp(-20.),
-                max_std=np.exp(2.)
-            )
+        policy = TanhGaussianPolicy(
+            obs_dim=obs_dim,
+            action_dim=action_dim,
+            hidden_sizes=[M, M, M],
+            hidden_nonlinearity=nn.ReLU,
+            output_nonlinearity=None,
+            min_std=np.exp(-20.),
+            max_std=np.exp(2.)
+        )
 
         eval_path_collector = FedPathCollector(
             policy=policy,
