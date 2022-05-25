@@ -24,7 +24,7 @@ The main entry point to run our code is 'main.py'. Inside that file, you can fin
         fedFormer=True, # Whether to use FedFormer Q-Functions or not
         run_name="FedFormer", # For logging purposes
         version="normal",
-        from_saved=5, # How many encoder networks to save 
+        from_saved=0, # How many encoder networks to load from saved 
         layer_size=400, # Hidden layer size
         replay_buffer_size=int(1E6), 
         transformer_num_layers=2, # number of transformer encoder layers to use
