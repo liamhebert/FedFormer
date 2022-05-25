@@ -150,7 +150,7 @@ def experiment(variant):
             exploration_data_collector=expl_path_collector,
             evaluation_data_collector=eval_path_collector,
             replay_buffer=replay_buffer,
-            name=f'{variant['run_name']} - agent {name} ({i})',
+            name=f'{variant['run_name']} - {variant['task']} - agent {name} ({i})',
             **variant['algorithm_kwargs']
         )
         algorithm_instance.to(ptu.device)
