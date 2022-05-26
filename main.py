@@ -11,7 +11,7 @@ from rlkit.torch.networks import ConcatMlp
 import numpy as np 
 import torch.nn as nn
 from sac_algorithm import TorchBatchRLAlgorithm
-from fed_trainer import FedTrainer
+from sac_trainer import SACTrainer
 from fed_algorithm import FedAlgorithm
 from fedformer import FedFormer
 from fed_path_collector import FedPathCollector
@@ -150,7 +150,7 @@ def experiment(variant):
             exploration_data_collector=expl_path_collector,
             evaluation_data_collector=eval_path_collector,
             replay_buffer=replay_buffer,
-            name=f'{variant['run_name']} - {variant['task']} - agent {name} ({i})',
+            name=f"{variant['run_name']} - {variant['task']} - agent {name} ({i})",
             **variant['algorithm_kwargs']
         )
         algorithm_instance.to(ptu.device)
