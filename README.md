@@ -13,6 +13,7 @@ We provide conda env files at 'environment.yml' which contains all of our python
 ```shell
 conda env create --prefix <env-location> -f environment.yml
 ```
+in addition to [MuJoCo 2.10 via mujoco-py](https://github.com/openai/mujoco-py)
 
 ## To run: 
 The main entry point to run our code is 'main.py'. Inside that file, you can find a dict containing tunable hyperparameters such as: 
