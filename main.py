@@ -123,17 +123,19 @@ def experiment(variant):
 
         eval_path_collector = FedPathCollector(
             policy=policy,
-            task_list=tasks_test
+            task_list=tasks_test,
+            task_name=variant['task']
         )
         expl_path_collector = FedPathCollector(
             policy=policy,
-            task_list=tasks_train
+            task_list=tasks_train,
+            task_name=variant['task']
         )
         replay_buffer = EnvReplayBuffer(
             variant['replay_buffer_size'],
             expl_env,
         )
-        trainer = FedTrainer(
+        trainer = SACTrainer(
             env=eval_env,
             policy=policy,
             qf1=qf1,

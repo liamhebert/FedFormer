@@ -2,12 +2,15 @@ from rlkit.samplers.data_collector import MdpPathCollector
 from rlkit.samplers.rollout_functions import rollout
 import numpy as np
 from rlkit.envs.wrappers import NormalizedBoxEnv
+import metaworld 
 
+BENCHMARK = metaworld.MT10()
 class FedPathCollector(MdpPathCollector):
     def __init__(
         self,
         policy,
         task_list,
+        task_name,
         max_num_epoch_paths_saved=None,
         render=False,
         render_kwargs=None,
@@ -21,6 +24,7 @@ class FedPathCollector(MdpPathCollector):
             rollout_fn,
             save_env_in_snapshot)
         
+        self.env_cls = BENCHMARK.train_classes[task_name]()
         
         self.task_list = task_list
         self.task_order = np.arange(len(self.task_list))
