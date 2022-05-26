@@ -64,4 +64,4 @@ Once the experiment has finished running, all results can be seen by running
 ```
 tensorboard --logdir=runs
 ```
-It is important to note that the results reported in the paper are the average performance of all agents, whereas the tensorboard results will report the performance of each individual agent. 
+It is important to note that the results reported in the paper are the average performance of all agents, whereas the tensorboard results will report the performance of each individual agent. That is, for Federated Methods with 5 agents, each run will generate 5 reward curves corresponding to each method. 
