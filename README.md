@@ -13,7 +13,7 @@ We provide conda env files at 'environment.yml' which contains all of our python
 ```shell
 conda env create --prefix <env-location> -f environment.yml
 ```
-in addition to [MuJoCo 2.10 via mujoco-py](https://github.com/openai/mujoco-py)
+in addition to [MuJoCo 2.10 via mujoco-py](https://github.com/openai/mujoco-py). As part of our source code, we borrow modules from [RLKit](https://github.com/rail-berkeley/rlkit) and [Garage](https://github.com/rlworkgroup/garage). 
 
 ## To run: 
 The main entry point to run our code is 'main.py'. Inside that file, you can find a dict containing tunable hyperparameters such as: 
@@ -64,4 +64,4 @@ Once the experiment has finished running, all results can be seen by running
 ```
 tensorboard --logdir=runs
 ```
-It is important to note that the results reported in the paper are the average performance of all agents, whereas the tensorboard results will report the performance of each individual agent. 
+It is important to note that the results reported in the paper are the average performance of all agents, whereas the tensorboard results will report the performance of each individual agent. That is, for Federated Methods with 5 agents, each run will generate 5 reward curves corresponding to each method. 
