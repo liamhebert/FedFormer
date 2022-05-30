@@ -9,7 +9,7 @@ A core issue in federated reinforcement learning is defining how to aggregate in
 
 ![Results on MT10](https://github.com/liamhebert/FedFormer/raw/main/overall.png)
 
-In these graphs, Soft Actor Critique (SAC) results are trained on all environments (representative of not preserving privacy) wheras FedFormer and FedAvg are trained using a set of 5 agents each with distinct subsets of environments. Our results show that we match or exceed the performance of SAC and vastly outperform other federated methods such as FedAvg. 
+In these graphs, Soft Actor Critique (SAC) results are trained on all environments (representative of not preserving privacy) wheras FedFormer and FedAvg are trained using a set of 5 agents each with distinct subsets of environments (representative of multiple agents preserving privacy). Our results show that we match or exceed the performance of SAC and vastly outperform other federated methods such as FedAvg. 
 
 ## To install:
 We provide conda env files at 'environment.yml' which contains all of our python dependencies. You can create the environment as 
