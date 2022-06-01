@@ -68,3 +68,24 @@ Once the experiment has finished running, all results can be seen by running
 tensorboard --logdir=runs
 ```
 It is important to note that the results reported in the paper are the average performance of all agents, whereas the tensorboard results will report the performance of each individual agent. That is, for Federated Methods with 5 agents, each run will generate 5 reward curves corresponding to each method. 
+
+## Citation
+```
+@misc{hebert2022FedFormer,
+  doi = {10.48550/ARXIV.2205.13697},
+  
+  url = {https://arxiv.org/abs/2205.13697},
+  
+  author = {Hebert, Liam and Golab, Lukasz and Poupart, Pascal and Cohen, Robin},
+  
+  keywords = {Machine Learning (cs.LG), Artificial Intelligence (cs.AI), FOS: Computer and information sciences, FOS: Computer and information sciences},
+  
+  title = {FedFormer: Contextual Federation with Attention in Reinforcement Learning},
+  
+  publisher = {arXiv},
+  
+  year = {2022},
+  
+  copyright = {Creative Commons Attribution 4.0 International}
+}
+```
