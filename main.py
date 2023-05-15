@@ -26,12 +26,13 @@ def experiment(variant):
     envs = [task for task in mt10.train_tasks if task.env_name == variant['task']]
     for env_cls in [mt10.train_classes[variant['task']] for _ in range(variant['num_agents'])]:
         env = env_cls()
-        tasks_train = random.sample(envs, k=5)
+        tasks_train = random.sample(envs, k=50)
         if not variant['overlap']:
             envs = [x for x in envs if x not in tasks_train]
-        tasks_test = random.sample(envs, k=5)
-        if not variant['overlap']:
-            envs = [x for x in envs if x not in tasks_test]
+        tasks_test = tasks_train
+        #tasks_test = random.sample(envs, k=5)
+        #if not variant['overlap']:
+        #    envs = [x for x in envs if x not in tasks_test]
         env.set_task(tasks_train[0]) # only used for env information
         training_envs.append((env, tasks_train, tasks_test, variant['task']))
 
@@ -114,7 +115,7 @@ def experiment(variant):
         policy = TanhGaussianPolicy(
             obs_dim=obs_dim,
             action_dim=action_dim,
-            hidden_sizes=[M, M, M],
+            hidden_sizes=[M, M],
             hidden_nonlinearity=nn.ReLU,
             output_nonlinearity=None,
             min_std=np.exp(-20.),
@@ -159,38 +160,39 @@ def experiment(variant):
         algorithms += [algorithm_instance]
   
 
-    algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'])
+    algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'], variant['fedFormer'])
     algorithm.train()
 
 @click.command()
 @click.option("--task", default="window-close-v2", help="MT10 Task Name")
 @click.option("--seed", default=1, help="Random Seed")
-def main(task, seed):
+@click.option("--agents", default=5, help="Number of Agents")
+def main(task, seed, agents):
     random.seed(seed)
     variant = dict(
-        algorithm="FedFormer",
+        algorithm="SAC50EnvSame",
         task=task,
         overlap=False, # whether enviroments should overlap
-        fedFormer=True, # Whether to use FedFormer Q-Functions or not
-        run_name="FedFormer", # For logging purposes
+        fedFormer=False, # Whether to use FedFormer Q-Functions or not
+        run_name="SAC50EnvSame - " + str(agents) + " - " + str(seed), # For logging purposes
         version="normal",
         from_saved=0, # How many encoder networks to save 
         layer_size=400, # Hidden layer size
         replay_buffer_size=int(1E6), 
         transformer_num_layers=2, # number of transformer encoder layers to use
-        num_agents=5, # number of federation agents to initialize
+        num_agents=agents, # number of federation agents to initialize
         transformer_layer_kwargs=dict(
             d_model=400, # hidden size for each transformer layer
             nhead=4 # number of attention heads to initialize
         ),
         algorithm_kwargs=dict(
-            num_epochs=250,
-            num_eval_steps_per_epoch=5000,
-            num_trains_per_train_loop=600,
-            num_expl_steps_per_train_loop=400,
-            min_num_steps_before_training=400,
-            max_path_length=500,
-            batch_size=1200,
+            num_epochs=500, # 250
+            num_eval_steps_per_epoch=500, # 5000
+            num_trains_per_train_loop=500, # 600
+            num_expl_steps_per_train_loop=400, # 400
+            min_num_steps_before_training=400, # 400
+            max_path_length=500, # 500
+            batch_size=500, # 1200
         ),
         trainer_kwargs=dict(
             discount=0.99,
