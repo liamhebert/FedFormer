@@ -1,6 +1,6 @@
 # FedFormer: Contextual Federation with Attention in Reinforcement Learning
 ![Architecture](https://github.com/liamhebert/FedFormer/raw/main/FedFormer%20Architecture.png)
-This repository contains for the code for the AAMAS 22' paper FedFormer: Contextual Federation with Attention in Reinforcement Learning. [Paper](https://arxiv.org/abs/2205.13697)
+This repository contains for the code for the AAMAS 23' paper FedFormer: Contextual Federation with Attention in Reinforcement Learning. [Paper](https://arxiv.org/abs/2205.13697)
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/liamhebert/FedFormer/blob/main/LICENSE)
 
