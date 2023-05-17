@@ -63,9 +63,9 @@ The main entry point to run our code is 'main.py'. Inside that file, you can fin
 ```
 Once modified, run as 
 ```
-python main.py --task=<task> --seed=<seed>
+python main.py --task=<task> --seed=<seed> --agents=<num_agents> 
 ```
-where "task" is once of the [10 MT10 MetaWorld Tasks](https://meta-world.github.io/figures/ml10.gif), such as `reach-v2` and `window-close-v2`, and "seed" is a numerical random seed to set environment distribution. 
+where "task" is once of the [10 MT10 MetaWorld Tasks](https://meta-world.github.io/figures/ml10.gif), such as `reach-v2` and `window-close-v2`, "seed" is a numerical random seed to set environment distribution, and "agents" is the number of agents to federate
     
 Once the experiment has finished running, all results can be seen by running 
 ```
