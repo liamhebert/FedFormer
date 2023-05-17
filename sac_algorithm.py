@@ -65,6 +65,9 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
     def get_networks(self):
         return self.trainer.networks[1:]
     
+    def get_stats(self):
+        return self.trainer.get_stats()
+    
     def set_networks(self, networks):
         self.trainer.set_networks(networks)
        
@@ -76,9 +79,11 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
         # ):
 
         offline_rl = epoch < 0
+        #self.trainer.to('cuda:0')
         self._begin_epoch(epoch)
         self._step(epoch, offline_rl)
         self._end_epoch(epoch)
+        #self.trainer.to('cpu')
 
     def _step(self, epoch, offline_rl):
         if epoch == 0 and self.min_num_steps_before_training > 0:
