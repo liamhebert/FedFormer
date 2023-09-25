@@ -1,8 +1,8 @@
 import numpy as np
 import itertools
-from gym import Env
-from gym.spaces import Box
-from gym.spaces import Discrete
+from gymnasium import Env
+from gymnasium.spaces import Box
+from gymnasium.spaces import Discrete
 
 from collections import deque
 

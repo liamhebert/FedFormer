@@ -1,5 +1,5 @@
 import numpy as np
-from gym.spaces import Box
+from gymnasium.spaces import Box
 
 from rlkit.envs.wrappers.image_mujoco_env import ImageMujocoEnv
 

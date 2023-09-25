@@ -57,6 +57,7 @@ class FedPathCollector(MdpPathCollector):
                 render=self._render,
                 render_kwargs=self._render_kwargs,
             )
+        
             path_len = len(path['actions'])
             if (
                     path_len != max_path_length

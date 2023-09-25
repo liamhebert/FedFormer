@@ -1,4 +1,4 @@
-from gym.envs.mujoco import AntEnv
+from gymnasium.envs.mujoco import AntEnv
 
 
 class AntNormal(AntEnv):

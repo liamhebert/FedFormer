@@ -70,8 +70,11 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
     
     def set_networks(self, networks):
         self.trainer.set_networks(networks)
+    
+    def to(self, device):
+        self.trainer.to(device)
        
-    def step(self, epoch):
+    def step(self, gpu, epoch):
         """Negative epochs are offline, positive epochs are online"""
         # for self.epoch in gt.timed_for(
         #         range(self._start_epoch, self.num_epochs),
@@ -79,7 +82,7 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
         # ):
 
         offline_rl = epoch < 0
-        #self.trainer.to('cuda:0')
+        self.trainer.to('cuda:' + str(gpu))
         self._begin_epoch(epoch)
         self._step(epoch, offline_rl)
         self._end_epoch(epoch)

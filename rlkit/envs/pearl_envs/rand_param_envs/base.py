@@ -2,7 +2,7 @@
 # from rlkit.envs.pearl_envs.rand_param_envs.gym.envs.mujoco import MujocoEnv
 import numpy as np
 from gym import Env
-from gym.envs.mujoco import MujocoEnv
+from gymnasium.envs.mujoco import MujocoEnv
 # from rlkit.envs.mujoco.mujoco_env import MujocoEnv
 
 

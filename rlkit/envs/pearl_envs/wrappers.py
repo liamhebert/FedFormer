@@ -1,6 +1,6 @@
 import numpy as np
 from gym import Env
-from gym.spaces import Box
+from gymnasium.spaces import Box
 import mujoco_py
 
 from rlkit.core.serializable import Serializable

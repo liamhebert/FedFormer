@@ -61,6 +61,7 @@ class TanhGaussianPolicy(Mlp, TorchStochasticPolicy):
 
 
     def forward(self, obs):
+        
         dist = self._module(obs)
 
         return dist

@@ -1,4 +1,4 @@
-from gym.envs.mujoco import (
+from gymnasium.envs.mujoco import (
     HalfCheetahEnv,
     AntEnv,
     Walker2dEnv,
@@ -7,8 +7,8 @@ from gym.envs.mujoco import (
     HumanoidEnv,
     SwimmerEnv,
 )
-from gym.envs.classic_control import PendulumEnv
-import gym
+from gymnasium.envs.classic_control import PendulumEnv
+import gymnasium as gym
 
 from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
 from rlkit.envs.wrappers import NormalizedBoxEnv, StackObservationEnv

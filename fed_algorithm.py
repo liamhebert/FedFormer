@@ -5,26 +5,30 @@ from sac_algorithm import TorchBatchRLAlgorithm
 from joblib import Parallel, delayed
 import torch 
 import numpy as np
+from rlkit.core import Logger 
 
 class FedAlgorithm:
     def __init__(self,
                  algorithms: Iterable[TorchBatchRLAlgorithm],
                  num_epochs,
-                 fedFormer=False):
+                 fedFormer=False,
+                 max_jobs_per_gpu=1):
         self.num_epochs = num_epochs
         self.algorithms = algorithms
         self.fedFormer = fedFormer
+        self.logger = Logger(name='default')
+        self.max_jobs_per_gpu=max_jobs_per_gpu
 
     def train(self, start_epoch=0):
      
         for epoch in gt.timed_for(range(start_epoch, self.num_epochs), save_itrs=True):
             i = 0
-            
-            for algorithm in tqdm.tqdm(self.algorithms, desc='algorithms'):
-                algorithm.step(epoch)
-                gt.stamp(f'algorithm-{i}')
-                i += 1
+            num_gpus = torch.cuda.device_count()
 
+            with Parallel(n_jobs=num_gpus * self.max_jobs_per_gpu, prefer="threads") as parallel:
+                parallel(delayed(x.step)(gpu, epoch) for gpu, x in zip(list(range(num_gpus)) * len(self.algorithms), self.algorithms))
+
+            self.logger.log("Epoch {} finished".format(epoch), with_timestamp=True)
             if self.fedFormer: 
                 for k in tqdm.tqdm(range(len(self.algorithms)), desc='fusing'):
                     curr = self.algorithms[k]
@@ -38,7 +42,9 @@ class FedAlgorithm:
                 target_qf1 = []
                 target_qf2 = []
                 stats = []
+                
                 for k in tqdm.tqdm(range(len(self.algorithms)), desc='gathering'):
+                    self.algorithm.to('cuda:0')
                     networks = self.algorithms[k].get_networks()
                     qf1 += [networks[0]]
                     qf2 += [networks[1]]
@@ -83,10 +89,10 @@ class FedAlgorithm:
             target_qf2 = networks[3].get_encoders()
 
             for i in range(len(qf1)):
-                torch.save(qf1[i], f'networks/qf1/encoder-{i}.pt')
-                torch.save(qf2[i], f'networks/qf2/encoder-{i}.pt')
-                torch.save(target_qf1[i], f'networks/target_qf1/encoder-{i}.pt')
-                torch.save(target_qf2[i], f'networks/target_qf2/encoder-{i}.pt')
+                torch.save(qf1[i], f'./networks/qf1/encoder-{i}.pt')
+                torch.save(qf2[i], f'./networks/qf2/encoder-{i}.pt')
+                torch.save(target_qf1[i], f'./networks/target_qf1/encoder-{i}.pt')
+                torch.save(target_qf2[i], f'./networks/target_qf2/encoder-{i}.pt')
 
 
     def merge_networks(self, networks, weights):

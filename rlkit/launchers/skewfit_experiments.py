@@ -209,7 +209,7 @@ def generate_vae_dataset(variant):
             now = time.time()
 
             if env_id is not None:
-                import gym
+                import gymnasium as gym
                 import multiworld
                 multiworld.register_all_envs()
                 env = gym.make(env_id)
@@ -315,7 +315,7 @@ def get_envs(variant):
     vae = load_local_or_remote_file(vae_path) if type(
         vae_path) is str else vae_path
     if 'env_id' in variant:
-        import gym
+        import gymnasium as gym
         import multiworld
         multiworld.register_all_envs()
         env = gym.make(variant['env_id'])

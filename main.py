@@ -1,4 +1,3 @@
-from gym.envs.mujoco import HalfCheetahEnv
 import metaworld
 import rlkit.torch.pytorch_util as ptu
 from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
@@ -26,13 +25,12 @@ def experiment(variant):
     envs = [task for task in mt10.train_tasks if task.env_name == variant['task']]
     for env_cls in [mt10.train_classes[variant['task']] for _ in range(variant['num_agents'])]:
         env = env_cls()
-        tasks_train = random.sample(envs, k=50)
+        tasks_train = random.sample(envs, k=5)
         if not variant['overlap']:
             envs = [x for x in envs if x not in tasks_train]
-        tasks_test = tasks_train
-        #tasks_test = random.sample(envs, k=5)
-        #if not variant['overlap']:
-        #    envs = [x for x in envs if x not in tasks_test]
+        tasks_test = random.sample(envs, k=5)
+        if not variant['overlap']:
+            envs = [x for x in envs if x not in tasks_test]
         env.set_task(tasks_train[0]) # only used for env information
         training_envs.append((env, tasks_train, tasks_test, variant['task']))
 
@@ -132,6 +130,7 @@ def experiment(variant):
             task_list=tasks_train,
             task_name=variant['task']
         )
+
         replay_buffer = EnvReplayBuffer(
             variant['replay_buffer_size'],
             expl_env,
@@ -160,7 +159,7 @@ def experiment(variant):
         algorithms += [algorithm_instance]
   
 
-    algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'], variant['fedFormer'])
+    algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'], variant['fedFormer'], variant['num_jobs_per_gpu'])
     algorithm.train()
 
 @click.command()
@@ -170,15 +169,15 @@ def experiment(variant):
 def main(task, seed, agents):
     random.seed(seed)
     variant = dict(
-        algorithm="SAC50EnvSame",
+        algorithm="FedFormer",
         task=task,
         overlap=False, # whether enviroments should overlap
-        fedFormer=False, # Whether to use FedFormer Q-Functions or not
-        run_name="SAC50EnvSame - " + str(agents) + " - " + str(seed), # For logging purposes
-        version="normal",
+        fedFormer=True, # Whether to use FedFormer Q-Functions or not
+        run_name="FedFormer - " + str(agents) + " - " + str(seed), # For logging purposes
         from_saved=0, # How many encoder networks to save 
         layer_size=400, # Hidden layer size
         replay_buffer_size=int(1E6), 
+        num_jobs_per_gpu=2, # number of agents to train in parallel per gpu
         transformer_num_layers=2, # number of transformer encoder layers to use
         num_agents=agents, # number of federation agents to initialize
         transformer_layer_kwargs=dict(
@@ -193,6 +192,7 @@ def main(task, seed, agents):
             min_num_steps_before_training=400, # 400
             max_path_length=500, # 500
             batch_size=500, # 1200
+            
         ),
         trainer_kwargs=dict(
             discount=0.99,
@@ -202,6 +202,7 @@ def main(task, seed, agents):
             qf_lr=3E-4,
             reward_scale=1,
             use_automatic_entropy_tuning=True,
+            
         ),
     )
     setup_logger('', variant=variant)

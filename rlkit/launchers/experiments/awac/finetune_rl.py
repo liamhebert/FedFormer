@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 # import roboverse
 from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
 from rlkit.data_management.split_buffer import SplitReplayBuffer

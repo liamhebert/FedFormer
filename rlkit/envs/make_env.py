@@ -3,7 +3,7 @@ This file provides a more uniform interface to gym.make(env_id) that handles
 imports and normalization
 """
 
-import gym
+import gymnasium as gym
 
 from rlkit.envs.wrappers import NormalizedBoxEnv
 

@@ -1,6 +1,6 @@
 import os
 
-from gym.spaces import Box, Discrete, Tuple
+from gymnasium.spaces import Box, Discrete, Tuple
 
 ENV_ASSET_DIR = os.path.join(os.path.dirname(__file__), 'assets')
 
@@ -19,6 +19,7 @@ def get_dim(space):
     elif hasattr(space, 'flat_dim'):
         return space.flat_dim
     else:
+        print('TYPE: ', type(space))
         raise TypeError("Unknown space: {}".format(space))
 
 

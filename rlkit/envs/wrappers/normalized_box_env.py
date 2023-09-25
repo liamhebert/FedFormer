@@ -1,5 +1,5 @@
 import numpy as np
-from gym.spaces import Box
+from gymnasium.spaces import Box
 
 from rlkit.envs.proxy_env import ProxyEnv
 
@@ -52,7 +52,10 @@ class NormalizedBoxEnv(ProxyEnv):
         scaled_action = np.clip(scaled_action, lb, ub)
 
         wrapped_step = self._wrapped_env.step(scaled_action)
-        next_obs, reward, done, info = wrapped_step
+        
+        next_obs, reward, done, truncated, info = wrapped_step
+        if type(next_obs) == tuple:
+            print("NEXT OBS", next_obs, type(next_obs), flush=True)
         if self._should_normalize:
             next_obs = self._apply_normalize_obs(next_obs)
         return next_obs, reward * self._reward_scale, done, info

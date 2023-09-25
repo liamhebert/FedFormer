@@ -1,5 +1,5 @@
 import numpy as np
-from gym.envs.mujoco import HumanoidEnv as HumanoidEnv
+from gymnasium.envs.mujoco import HumanoidEnv as HumanoidEnv
 
 
 def mass_center(model, sim):

@@ -1,4 +1,4 @@
-from gym.spaces import Discrete
+from gymnasium.spaces import Discrete
 
 from rlkit.data_management.simple_replay_buffer import SimpleReplayBuffer
 from rlkit.envs.env_utils import get_dim
@@ -25,7 +25,6 @@ class EnvReplayBuffer(SimpleReplayBuffer):
                 env_info_sizes = env.info_sizes
             else:
                 env_info_sizes = dict()
-
         super().__init__(
             max_replay_buffer_size=max_replay_buffer_size,
             observation_dim=get_dim(self._ob_space),
@@ -40,6 +39,7 @@ class EnvReplayBuffer(SimpleReplayBuffer):
             new_action[action] = 1
         else:
             new_action = action
+
         return super().add_sample(
             observation=observation,
             action=new_action,

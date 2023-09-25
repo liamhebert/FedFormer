@@ -2,7 +2,7 @@ import itertools
 
 import numpy as np
 from gym import Env
-from gym.spaces import Discrete
+from gymnasium.spaces import Discrete
 
 from rlkit.envs.proxy_env import ProxyEnv
 

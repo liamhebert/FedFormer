@@ -5,7 +5,7 @@ from PIL import Image
 from collections.__init__ import deque
 
 from gym import Env
-from gym.spaces import Box
+from gymnasium.spaces import Box
 
 from rlkit.envs.wrappers import ProxyEnv
 

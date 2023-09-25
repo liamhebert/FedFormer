@@ -98,7 +98,8 @@ def rollout(
     next_observations = []
     path_length = 0
     agent.reset()
-    o = env.reset()
+    o = env.reset()[0] # initial reset is (obs, info)
+
     if reset_callback:
         reset_callback(env, agent, o)
     if render:
