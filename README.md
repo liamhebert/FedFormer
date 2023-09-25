@@ -25,30 +25,31 @@ in addition to [MuJoCo 2.10 via mujoco-py](https://github.com/openai/mujoco-py).
 ## To run: 
 The main entry point to run our code is 'main.py'. Inside that file, you can find a dict containing tunable hyperparameters such as: 
 ```python
-    variant = dict(
+variant = dict(
         algorithm="FedFormer",
         task=task,
         overlap=False, # whether enviroments should overlap
         fedFormer=True, # Whether to use FedFormer Q-Functions or not
-        run_name="FedFormer", # For logging purposes
-        version="normal",
-        from_saved=0, # How many encoder networks to load from saved 
+        run_name="FedFormer - " + str(agents) + " - " + str(seed), # For logging purposes
+        from_saved=0, # How many encoder networks to save 
         layer_size=400, # Hidden layer size
         replay_buffer_size=int(1E6), 
+        num_jobs_per_gpu=2, # number of agents to train in parallel per gpu
         transformer_num_layers=2, # number of transformer encoder layers to use
-        num_agents=5, # number of federation agents to initialize
+        num_agents=agents, # number of federation agents to initialize
         transformer_layer_kwargs=dict(
             d_model=400, # hidden size for each transformer layer
             nhead=4 # number of attention heads to initialize
         ),
         algorithm_kwargs=dict(
-            num_epochs=250,
-            num_eval_steps_per_epoch=5000,
-            num_trains_per_train_loop=600,
-            num_expl_steps_per_train_loop=400,
-            min_num_steps_before_training=400,
-            max_path_length=500,
-            batch_size=1200,
+            num_epochs=500, # 250
+            num_eval_steps_per_epoch=500, # 5000
+            num_trains_per_train_loop=500, # 600
+            num_expl_steps_per_train_loop=400, # 400
+            min_num_steps_before_training=400, # 400
+            max_path_length=500, # 500
+            batch_size=500, # 1200
+            
         ),
         trainer_kwargs=dict(
             discount=0.99,
