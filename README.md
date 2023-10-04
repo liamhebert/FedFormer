@@ -76,21 +76,11 @@ It is important to note that the results reported in the paper are the average p
 
 ## Citation
 ```
-@misc{hebert2022FedFormer,
-  doi = {10.48550/ARXIV.2205.13697},
-  
-  url = {https://arxiv.org/abs/2205.13697},
-  
-  author = {Hebert, Liam and Golab, Lukasz and Poupart, Pascal and Cohen, Robin},
-  
-  keywords = {Machine Learning (cs.LG), Artificial Intelligence (cs.AI), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  
-  title = {FedFormer: Contextual Federation with Attention in Reinforcement Learning},
-  
-  publisher = {arXiv},
-  
-  year = {2022},
-  
-  copyright = {Creative Commons Attribution 4.0 International}
+@inproceedings{hebert2023fedformer,
+  title={FedFormer: Contextual Federation with Attention in Reinforcement Learning},
+  author={Hebert, Liam and Golab, Lukasz and Poupart, Pascal and Cohen, Robin},
+  booktitle={Proceedings of the 2023 International Conference on Autonomous Agents and Multiagent Systems},
+  pages={810--818},
+  year={2023}
 }
 ```
