@@ -1,35 +1,38 @@
-from typing import Tuple, Iterable, OrderedDict
+from typing import Iterable, OrderedDict
 import gtimer as gt
 import tqdm
 from sac_algorithm import TorchBatchRLAlgorithm
-from joblib import Parallel, delayed
 import torch 
 import numpy as np
 from rlkit.core import Logger 
+import os
 
 class FedAlgorithm:
     def __init__(self,
                  algorithms: Iterable[TorchBatchRLAlgorithm],
                  num_epochs,
-                 fedFormer=False,
-                 max_jobs_per_gpu=1):
+                 fedFormer=False):
         self.num_epochs = num_epochs
         self.algorithms = algorithms
         self.fedFormer = fedFormer
         self.logger = Logger(name='default')
-        self.max_jobs_per_gpu=max_jobs_per_gpu
 
     def train(self, start_epoch=0):
      
         for epoch in gt.timed_for(range(start_epoch, self.num_epochs), save_itrs=True):
             i = 0
-            num_gpus = torch.cuda.device_count()
-
-            with Parallel(n_jobs=num_gpus * self.max_jobs_per_gpu, prefer="threads") as parallel:
-                parallel(delayed(x.step)(gpu, epoch) for gpu, x in zip(list(range(num_gpus)) * len(self.algorithms), self.algorithms))
+            
+            # TODO(liamhebert): This can absolutely be parallelized across
+            # multiple GPUs. The only issue is that rlkit uses global variables
+            # to set the current gpu device and uses that variable across various
+            # utility functions. Making that parameter per-thread would require 
+            # a significant rewrite. 
+            # See: rlkit.torch.pytorch_util.py: set_gpu_mode
+            for algorithm in self.algorithms:
+                algorithm.step(epoch)
 
             self.logger.log("Epoch {} finished".format(epoch), with_timestamp=True)
-            if self.fedFormer: 
+            if self.fedFormer:
                 for k in tqdm.tqdm(range(len(self.algorithms)), desc='fusing'):
                     curr = self.algorithms[k]
                     for j in range(k + 1, len(self.algorithms)):
@@ -89,6 +92,13 @@ class FedAlgorithm:
             target_qf2 = networks[3].get_encoders()
 
             for i in range(len(qf1)):
+                # Create directories if they don't exist
+                os.makedirs(f'./networks/qf1', exist_ok=True)
+                os.makedirs(f'./networks/qf2', exist_ok=True)
+                os.makedirs(f'./networks/target_qf1', exist_ok=True)
+                os.makedirs(f'./networks/target_qf2', exist_ok=True)
+                
+                # Save the checkpoints
                 torch.save(qf1[i], f'./networks/qf1/encoder-{i}.pt')
                 torch.save(qf2[i], f'./networks/qf2/encoder-{i}.pt')
                 torch.save(target_qf1[i], f'./networks/target_qf1/encoder-{i}.pt')

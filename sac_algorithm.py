@@ -1,16 +1,6 @@
-from collections import OrderedDict, namedtuple
-from typing import Tuple
-
-import numpy as np
-import torch
-import torch.optim as optim
-from rlkit.core.loss import LossFunction, LossStatistics
 from torch import nn as nn
 
 import rlkit.torch.pytorch_util as ptu
-from rlkit.core.eval_util import create_stats_ordered_dict
-from rlkit.torch.torch_rl_algorithm import TorchTrainer
-from rlkit.core.logging import add_prefix
 import gtimer as gt
 from rlkit.core.rl_algorithm import BaseRLAlgorithm
 from rlkit.data_management.replay_buffer import ReplayBuffer
@@ -74,7 +64,7 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
     def to(self, device):
         self.trainer.to(device)
        
-    def step(self, gpu, epoch):
+    def step(self, epoch):
         """Negative epochs are offline, positive epochs are online"""
         # for self.epoch in gt.timed_for(
         #         range(self._start_epoch, self.num_epochs),
@@ -82,7 +72,8 @@ class BatchRLAlgorithm(BaseRLAlgorithm, metaclass=abc.ABCMeta):
         # ):
 
         offline_rl = epoch < 0
-        self.trainer.to('cuda:' + str(gpu))
+        self.trainer.to(ptu.device)
+
         self._begin_epoch(epoch)
         self._step(epoch, offline_rl)
         self._end_epoch(epoch)

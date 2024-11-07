@@ -103,7 +103,6 @@ dependencies:
     - gymnasium==0.29.1
     - imageio==2.16.1
     - importlib-metadata==4.11.3
-    - joblib==1.1.0
     - jsonschema==4.4.0
     - kiwisolver==1.4.2
     - mako==1.2.0

@@ -3,8 +3,6 @@ import rlkit.torch.pytorch_util as ptu
 from rlkit.data_management.env_replay_buffer import EnvReplayBuffer
 from rlkit.envs.wrappers import NormalizedBoxEnv
 from rlkit.launchers.launcher_util import setup_logger
-from rlkit.samplers.data_collector import MdpPathCollector
-from rlkit.torch.sac.policies import MakeDeterministic
 from rlkit.torch.networks import ConcatMlp
 
 import numpy as np 
@@ -159,7 +157,7 @@ def experiment(variant):
         algorithms += [algorithm_instance]
   
 
-    algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'], variant['fedFormer'], variant['num_jobs_per_gpu'])
+    algorithm = FedAlgorithm(algorithms, variant['algorithm_kwargs']['num_epochs'], variant['fedFormer'])
     algorithm.train()
 
 @click.command()
@@ -177,7 +175,6 @@ def main(task, seed, agents):
         from_saved=0, # How many encoder networks to save 
         layer_size=400, # Hidden layer size
         replay_buffer_size=int(1E6), 
-        num_jobs_per_gpu=2, # number of agents to train in parallel per gpu
         transformer_num_layers=2, # number of transformer encoder layers to use
         num_agents=agents, # number of federation agents to initialize
         transformer_layer_kwargs=dict(
@@ -202,13 +199,13 @@ def main(task, seed, agents):
             qf_lr=3E-4,
             reward_scale=1,
             use_automatic_entropy_tuning=True,
-            
         ),
     )
     setup_logger('', variant=variant)
-    ptu.set_gpu_mode(True)  # optionally set the GPU (default=False)
+    ptu.set_gpu_mode(True)  # optionally set the GPU (default=True)
     print('DEVICE', ptu.device)
     experiment(variant)
+    print("All done! Have a nice day")
     
 if __name__ == "__main__":
     main()
