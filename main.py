@@ -169,17 +169,17 @@ def main(task, seed, agents):
     variant = dict(
         algorithm="FedFormer",
         task=task,
-        overlap=False, # whether enviroments should overlap
-        fedFormer=True, # Whether to use FedFormer Q-Functions or not
+        overlap=False, # Whether environments should overlap
+        fedFormer=True, # If True, uses FedFormer Q-Functions, else uses FedAvg.
         run_name="FedFormer - " + str(agents) + " - " + str(seed), # For logging purposes
         from_saved=0, # How many encoder networks to save 
         layer_size=400, # Hidden layer size
         replay_buffer_size=int(1E6), 
-        transformer_num_layers=2, # number of transformer encoder layers to use
-        num_agents=agents, # number of federation agents to initialize
+        transformer_num_layers=2, # Number of transformer encoder layers to use
+        num_agents=agents, # Number of federation agents to initialize
         transformer_layer_kwargs=dict(
-            d_model=400, # hidden size for each transformer layer
-            nhead=4 # number of attention heads to initialize
+            d_model=400, # Hidden size for each transformer layer
+            nhead=4 # Number of attention heads to initialize
         ),
         algorithm_kwargs=dict(
             num_epochs=500, # 250
@@ -202,7 +202,7 @@ def main(task, seed, agents):
         ),
     )
     setup_logger('', variant=variant)
-    ptu.set_gpu_mode(True)  # optionally set the GPU (default=True)
+    ptu.set_gpu_mode(True)  # optionally use the GPU (default=True)
     print('DEVICE', ptu.device)
     experiment(variant)
     print("All done! Have a nice day")
